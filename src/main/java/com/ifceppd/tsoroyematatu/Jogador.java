@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class Jogador extends javax.swing.JFrame {
     
-    private Cliente cliente;
+    private ConexaoCliente cliente;
     private int idJogador;
     private int outroJogador;
     private int[] values;
@@ -100,13 +100,13 @@ public class Jogador extends javax.swing.JFrame {
         cliente.closeConnection();
     }
     
-    private class Cliente {
+    private class ConexaoCliente {
     
         private Socket socket;
         private DataInputStream entrada;
         private DataOutputStream saida;
         
-        public Cliente(){
+        public ConexaoCliente(){
             System.out.println("----- Cliente -----");
 
             try{
@@ -163,7 +163,7 @@ public class Jogador extends javax.swing.JFrame {
     }
     
     public void conectaServidor(){
-        cliente = new Cliente();
+        cliente = new ConexaoCliente();
     }
     
     public void acaoBotao(javax.swing.JButton b){
@@ -301,8 +301,8 @@ public class Jogador extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(b1)
                 .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

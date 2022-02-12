@@ -19,8 +19,8 @@ public class Servidor {
     
     private ServerSocket serverSocket;
     private int qtdJogadores;
-    private Cliente jogador1;
-    private Cliente jogador2;
+    private ConexaoServidor jogador1;
+    private ConexaoServidor jogador2;
     private int turnsMade;
     private int maxTurns;
     private int[] values;
@@ -53,7 +53,7 @@ public class Servidor {
                 Socket s = serverSocket.accept();
                 qtdJogadores++;
                 System.out.println("Jogador #" + qtdJogadores + " se conectou");
-                Cliente jogador = new Cliente(s, qtdJogadores);
+                ConexaoServidor jogador = new ConexaoServidor(s, qtdJogadores);
                 
                 if(qtdJogadores == 1){
                     jogador1 = jogador;
@@ -70,14 +70,14 @@ public class Servidor {
         }
     }
     
-    private class Cliente implements Runnable {
+    private class ConexaoServidor implements Runnable {
     
         private Socket socket;
         private DataInputStream entrada;
         private DataOutputStream saida;
         private int idJogador;
 
-        public Cliente(Socket socket, int idJogador){
+        public ConexaoServidor(Socket socket, int idJogador){
             this.socket = socket;
             this.idJogador = idJogador;
 
