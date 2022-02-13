@@ -8,8 +8,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,98 +18,90 @@ public class Jogador extends javax.swing.JFrame {
     private ConexaoCliente cliente;
     private int idJogador;
     private int outroJogador;
-    private int[] values;
+    private int[] posicoes;
+    private boolean ativaBotoes;
     private boolean empate;
-
-    private int myPoints;
-    private int enemyPoints;
-    private boolean buttonsEnabled;
     
     /**
-     * Creates new form Player
+     * Creates new form Jogador
      */
     public Jogador() {
         
-        values = new int[7];
-        myPoints = 0;
-        enemyPoints = 0;
+        posicoes = new int[7];
         
         this.conectaServidor();
         initComponents();
         this.setTitle("Jogador #" + idJogador + " - Tsoro Yematatu");
         
         if(idJogador == 1){
-            message.setText("Jogador #1. Inicie a partida.");
+            mensagem.setText("Jogador #1. Inicie a partida.");
             outroJogador = 2;
-            buttonsEnabled = true;
+            ativaBotoes = true;
         }else{
-            message.setText("Jogador #2. Aguarde seu turno.");
+            mensagem.setText("Jogador #2. Aguarde seu turno.");
             outroJogador = 1;
-            buttonsEnabled = false;
+            ativaBotoes = false;
             
             Thread t = new Thread(new Runnable(){
                 public void run(){
-                    updateTurn();;
+                    controlaTurno();;
                 }
             });
             t.start();
         }
         
-        toggleButtons();
+        atualizaTabuleiro();
         
     }
     
-    public void toggleButtons() {
-        b1.setEnabled(buttonsEnabled);
-        b2.setEnabled(buttonsEnabled);
-        b3.setEnabled(buttonsEnabled);
-        b4.setEnabled(buttonsEnabled);
-        b5.setEnabled(buttonsEnabled);
-        b6.setEnabled(buttonsEnabled);
-        b7.setEnabled(buttonsEnabled);
+    public void atualizaTabuleiro() {
+        b1.setEnabled(ativaBotoes);
+        b2.setEnabled(ativaBotoes);
+        b3.setEnabled(ativaBotoes);
+        b4.setEnabled(ativaBotoes);
+        b5.setEnabled(ativaBotoes);
+        b6.setEnabled(ativaBotoes);
+        b7.setEnabled(ativaBotoes);
         
-        b1.setText("" + values[0]);
-        b2.setText("" + values[1]);
-        b3.setText("" + values[2]);
-        b4.setText("" + values[3]);
-        b5.setText("" + values[4]);
-        b6.setText("" + values[5]);
-        b7.setText("" + values[6]);
+        b1.setText("" + posicoes[0]);
+        b2.setText("" + posicoes[1]);
+        b3.setText("" + posicoes[2]);
+        b4.setText("" + posicoes[3]);
+        b5.setText("" + posicoes[4]);
+        b6.setText("" + posicoes[5]);
+        b7.setText("" + posicoes[6]);
     }
     
-    public void updateTurn(){
-        int n = cliente.receiveButtonNum();
-        message.setText("Your enemy clicked button #" + n + ". Your turn");
+    public void controlaTurno(){
+        int n = cliente.recebeJogada();
+        mensagem.setText("Seu adversário clicou o botão #" + n + ". Sua vez");
         
         if(idJogador == 1){
-            values[n-1] = 2;
+            posicoes[n-1] = 2;
         }else{
-            values[n-1] = 1;
+            posicoes[n-1] = 1;
         }
-        
-        //enemyPoints += values[n-1];
-        //System.out.println("Your enemy has " + enemyPoints + " points");
         
         if(idJogador == 1 && empate == true){
             checkWinner();
         }else{
-            buttonsEnabled = true;
+            ativaBotoes = true;
         }
         
-        toggleButtons();
+        atualizaTabuleiro();
     }
     
     private void checkWinner(){
-        buttonsEnabled = false;
-        if(myPoints > enemyPoints){
+        ativaBotoes = false;
+        /*if(myPoints > enemyPoints){
             message.setText("You WON!\n" + "YOU: " + myPoints + "\n" + "ENEMY: " + enemyPoints);
         } else if(myPoints < enemyPoints){
             message.setText("You LOST!\n" + "YOU: " + myPoints + "\n" + "ENEMY: " + enemyPoints);
         }else{
             message.setText("It's a tie!\n" + "You both got " + myPoints + " points.");
-        }
+        }*/
         
-        cliente.closeConnection();
+        cliente.fechaConexao();
     }
     
     private class ConexaoCliente {
@@ -135,20 +125,20 @@ public class Jogador extends javax.swing.JFrame {
             }
         }
         
-        public void sendButtonNum(int n){
+        public void enviaJogada(int n){
             try{
                 saida.writeInt(n);
                 saida.flush();
             } catch (IOException ex) {
-                System.out.println("Erro no sendButtonNum() do Cliente");
+                System.out.println("Erro no enviaJogada() do Cliente");
             }
         }
         
-        public int receiveButtonNum(){
+        public int recebeJogada(){
             int n = -1;
             try{
                 n = entrada.readInt();
-                System.out.println("Player #" + outroJogador + " clicked button #" + n);
+                System.out.println("Jogador #" + outroJogador + " clicou o botão #" + n);
             } catch (IOException ex) {
                 System.out.println("Erro no receiveButtonNum() do Cliente");
             }
@@ -156,12 +146,12 @@ public class Jogador extends javax.swing.JFrame {
             return n;
         }
         
-        public void closeConnection(){
+        public void fechaConexao(){
            try{
                 socket.close();
                 System.out.println("-----CONEXÃO ENCERRADA-----");
             } catch (IOException ex) {
-                System.out.println("Erro no closeConnection() do Cliente");
+                System.out.println("Erro no fechaConexao() do Cliente");
             } 
         }
         
@@ -174,26 +164,26 @@ public class Jogador extends javax.swing.JFrame {
     public void acaoBotao(int n){
         
         if(idJogador == 1){
-            values[n-1] = 1;
+            posicoes[n-1] = 1;
         }else{
-            values[n-1] = 2;
+            posicoes[n-1] = 2;
         }
         
-        message.setText("You clicked button #" + n + ". Now wait for player #" + outroJogador);
+        mensagem.setText("You clicked button #" + n + ". Now wait for player #" + outroJogador);
         
-        buttonsEnabled = false;
-        toggleButtons();
+        ativaBotoes = false;
+        atualizaTabuleiro();
         
         //myPoints += values[n - 1];
         //System.out.println("My points: " + myPoints);
-        cliente.sendButtonNum(n);
+        cliente.enviaJogada(n);
         
         if(idJogador == 2 && empate == true){
             checkWinner();
         }else{
             Thread t = new Thread(new Runnable(){
                 public void run(){
-                    updateTurn();;
+                    controlaTurno();;
                 }
             });
             t.start();
@@ -211,7 +201,7 @@ public class Jogador extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        message = new javax.swing.JTextArea();
+        mensagem = new javax.swing.JTextArea();
         b1 = new javax.swing.JButton();
         b2 = new javax.swing.JButton();
         b3 = new javax.swing.JButton();
@@ -223,13 +213,13 @@ public class Jogador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tsoro Yematatu");
 
-        message.setEditable(false);
-        message.setColumns(20);
-        message.setLineWrap(true);
-        message.setRows(1);
-        message.setText("Tsoro Yematatu");
-        message.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(message);
+        mensagem.setEditable(false);
+        mensagem.setColumns(20);
+        mensagem.setLineWrap(true);
+        mensagem.setRows(1);
+        mensagem.setText("Tsoro Yematatu");
+        mensagem.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(mensagem);
 
         b1.setText("1");
         b1.addActionListener(new java.awt.event.ActionListener() {
@@ -424,6 +414,6 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JButton b6;
     private javax.swing.JButton b7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea message;
+    private javax.swing.JTextArea mensagem;
     // End of variables declaration//GEN-END:variables
 }
