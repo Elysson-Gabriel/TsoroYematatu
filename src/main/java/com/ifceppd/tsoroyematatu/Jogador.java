@@ -19,6 +19,8 @@ public class Jogador extends javax.swing.JFrame {
     private int idJogador;
     private int outroJogador;
     private int[] posicoes;
+    private int qtdPecas;
+    private int qtdPecasAdv;
     private boolean ativaBotoes;
     private boolean empate;
     
@@ -28,7 +30,9 @@ public class Jogador extends javax.swing.JFrame {
     public Jogador() {
         
         posicoes = new int[7];
-        
+        qtdPecas = 0;
+        qtdPecasAdv = 0;
+                
         this.conectaServidor();
         initComponents();
         this.setTitle("Jogador #" + idJogador + " - Tsoro Yematatu");
@@ -70,25 +74,90 @@ public class Jogador extends javax.swing.JFrame {
         b5.setText("" + posicoes[4]);
         b6.setText("" + posicoes[5]);
         b7.setText("" + posicoes[6]);
+        
+        if(posicoes[0] > 0){
+            b1.setEnabled(false);
+        }
+        if(posicoes[1] > 0){
+            b2.setEnabled(false);
+        }
+        if(posicoes[2] > 0){
+            b3.setEnabled(false);
+        }
+        if(posicoes[3] > 0){
+            b4.setEnabled(false);
+        }
+        if(posicoes[4] > 0){
+            b5.setEnabled(false);
+        }
+        if(posicoes[5] > 0){
+            b6.setEnabled(false);
+        }
+        if(posicoes[6] > 0){
+            b7.setEnabled(false);
+        }
+        
+        if(qtdPecas == 3 && qtdPecasAdv == 3){
+            mudancaBotoes(0, false);
+        }
+    }
+    
+    public void mudancaBotoes(int valorComparacao, boolean estado){
+        if(posicoes[0] == valorComparacao){
+            b1.setEnabled(estado);
+        }
+        if(posicoes[1] == valorComparacao){
+            b2.setEnabled(estado);
+        }
+        if(posicoes[2] == valorComparacao){
+            b3.setEnabled(estado);
+        }
+        if(posicoes[3] == valorComparacao){
+            b4.setEnabled(estado);
+        }
+        if(posicoes[4] == valorComparacao){
+            b5.setEnabled(estado);
+        }
+        if(posicoes[5] == valorComparacao){
+            b6.setEnabled(estado);
+        }
+        if(posicoes[6] == valorComparacao){
+            b7.setEnabled(estado);
+        }
     }
     
     public void controlaTurno(){
         int n = cliente.recebeJogada();
         mensagem.setText("Seu adversário clicou o botão #" + n + ". Sua vez");
         
-        if(idJogador == 1){
-            posicoes[n-1] = 2;
-        }else{
-            posicoes[n-1] = 1;
+        if(qtdPecasAdv < 3){
+            if(idJogador == 1){
+                posicoes[n-1] = 2;
+            }else{
+                posicoes[n-1] = 1;
+            }
+            qtdPecasAdv++;
         }
         
-        if(idJogador == 1 && empate == true){
-            checkWinner();
+        if(qtdPecas == 3 && qtdPecasAdv == 3){
+            if(idJogador == 1){
+                mudancaBotoes(1, true);
+                mudancaBotoes(2, false);
+            }else{
+                mudancaBotoes(2, true);
+                mudancaBotoes(1, false);
+            }
         }else{
-            ativaBotoes = true;
+            if(idJogador == 1 && empate == true){
+                checkWinner();
+            }else{
+                ativaBotoes = true;
+            }
+
+            atualizaTabuleiro();
         }
         
-        atualizaTabuleiro();
+        
     }
     
     private void checkWinner(){
@@ -163,10 +232,13 @@ public class Jogador extends javax.swing.JFrame {
     
     public void acaoBotao(int n){
         
-        if(idJogador == 1){
-            posicoes[n-1] = 1;
-        }else{
-            posicoes[n-1] = 2;
+        if(qtdPecas < 3){
+            if(idJogador == 1){
+                posicoes[n-1] = 1;
+            }else{
+                posicoes[n-1] = 2;
+            }
+            qtdPecas++;
         }
         
         mensagem.setText("You clicked button #" + n + ". Now wait for player #" + outroJogador);
