@@ -21,8 +21,7 @@ public class Servidor {
     private int qtdJogadores;
     private ConexaoServidor jogador1;
     private ConexaoServidor jogador2;
-    private int turnsMade;
-    private int maxTurns;
+    private boolean empate;
     private int[] values;
     private int player1ButtonNum;
     private int player2ButtonNum;
@@ -30,14 +29,8 @@ public class Servidor {
     public Servidor(){
         System.out.println("----- Servidor -----");
         qtdJogadores = 0;
-        turnsMade = 0;
-        maxTurns = 4;
-        values = new int[4];
-        
-        for (int i = 0; i < values.length; i++){
-            values[i] = (int) Math.ceil(Math.random() * 100);
-            System.out.println("Value #" + (i+1) + " is " + values[i]);
-        }
+        empate = false;
+        values = new int[7];
         
         try {
             serverSocket = new ServerSocket(51734);
@@ -92,11 +85,7 @@ public class Servidor {
         public void run(){
             try{
                 saida.writeInt(idJogador);
-                saida.writeInt(maxTurns);
-                saida.writeInt(values[0]);
-                saida.writeInt(values[1]);
-                saida.writeInt(values[2]);
-                saida.writeInt(values[3]);
+                saida.writeBoolean(empate);
                 saida.flush();
 
                 while(true){
@@ -109,8 +98,8 @@ public class Servidor {
                         System.out.println("Player 2 clicked button #" + player2ButtonNum);
                         jogador1.sendButtonNum(player2ButtonNum);
                     }
-                    turnsMade++;
-                    if(turnsMade == maxTurns){
+ 
+                    if(empate == true){
                         System.out.println("Max turns has been reached.");
                         break;
                     }

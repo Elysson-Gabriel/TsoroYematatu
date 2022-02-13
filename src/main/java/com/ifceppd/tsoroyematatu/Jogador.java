@@ -21,8 +21,8 @@ public class Jogador extends javax.swing.JFrame {
     private int idJogador;
     private int outroJogador;
     private int[] values;
-    private int maxTurns;
-    private int turnsMade;
+    private boolean empate;
+
     private int myPoints;
     private int enemyPoints;
     private boolean buttonsEnabled;
@@ -32,8 +32,7 @@ public class Jogador extends javax.swing.JFrame {
      */
     public Jogador() {
         
-        values = new int[4];
-        turnsMade = 0;
+        values = new int[7];
         myPoints = 0;
         enemyPoints = 0;
         
@@ -70,15 +69,30 @@ public class Jogador extends javax.swing.JFrame {
         b5.setEnabled(buttonsEnabled);
         b6.setEnabled(buttonsEnabled);
         b7.setEnabled(buttonsEnabled);
+        
+        b1.setText("" + values[0]);
+        b2.setText("" + values[1]);
+        b3.setText("" + values[2]);
+        b4.setText("" + values[3]);
+        b5.setText("" + values[4]);
+        b6.setText("" + values[5]);
+        b7.setText("" + values[6]);
     }
     
     public void updateTurn(){
         int n = cliente.receiveButtonNum();
         message.setText("Your enemy clicked button #" + n + ". Your turn");
-        enemyPoints += values[n-1];
+        
+        if(idJogador == 1){
+            values[n-1] = 2;
+        }else{
+            values[n-1] = 1;
+        }
+        
+        //enemyPoints += values[n-1];
         //System.out.println("Your enemy has " + enemyPoints + " points");
         
-        if(idJogador == 1 && turnsMade == maxTurns){
+        if(idJogador == 1 && empate == true){
             checkWinner();
         }else{
             buttonsEnabled = true;
@@ -115,16 +129,7 @@ public class Jogador extends javax.swing.JFrame {
                 saida = new DataOutputStream(socket.getOutputStream());
                 idJogador = entrada.readInt();
                 System.out.println("Conectado ao servidor como Jogador #" + idJogador + ".");
-                maxTurns = entrada.readInt() / 2;
-                values[0] = entrada.readInt();
-                values[1] = entrada.readInt();
-                values[2] = entrada.readInt();
-                values[3] = entrada.readInt();
-                System.out.println("maxTurns: " + maxTurns);
-                System.out.println("Value # 1 is " + values[0]);
-                System.out.println("Value # 2 is " + values[1]);
-                System.out.println("Value # 3 is " + values[2]);
-                System.out.println("Value # 4 is " + values[3]);
+                empate = entrada.readBoolean();
             } catch (IOException ex) {
                 System.out.println("Erro no construtor do cliente");
             }
@@ -166,20 +171,24 @@ public class Jogador extends javax.swing.JFrame {
         cliente = new ConexaoCliente();
     }
     
-    public void acaoBotao(javax.swing.JButton b){
-        int bNum = Integer.parseInt(b.getText());
-        message.setText("You clicked button #" + bNum + ". Now wait for player #" + outroJogador);
-        turnsMade++;
-        System.out.println("Turns made: " + turnsMade);
+    public void acaoBotao(int n){
+        
+        if(idJogador == 1){
+            values[n-1] = 1;
+        }else{
+            values[n-1] = 2;
+        }
+        
+        message.setText("You clicked button #" + n + ". Now wait for player #" + outroJogador);
         
         buttonsEnabled = false;
         toggleButtons();
         
-        myPoints += values[bNum - 1];
-        System.out.println("My points: " + myPoints);
-        cliente.sendButtonNum(bNum);
+        //myPoints += values[n - 1];
+        //System.out.println("My points: " + myPoints);
+        cliente.sendButtonNum(n);
         
-        if(idJogador == 2 && turnsMade == maxTurns){
+        if(idJogador == 2 && empate == true){
             checkWinner();
         }else{
             Thread t = new Thread(new Runnable(){
@@ -322,37 +331,37 @@ public class Jogador extends javax.swing.JFrame {
 
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b1);
+        acaoBotao(1);
     }//GEN-LAST:event_b1ActionPerformed
 
     private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b2);
+        acaoBotao(2);
     }//GEN-LAST:event_b2ActionPerformed
 
     private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b3);
+        acaoBotao(3);
     }//GEN-LAST:event_b3ActionPerformed
 
     private void b4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b4ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b4);
+        acaoBotao(4);
     }//GEN-LAST:event_b4ActionPerformed
 
     private void b5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b5ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b5);
+        acaoBotao(5);
     }//GEN-LAST:event_b5ActionPerformed
 
     private void b6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b6ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b6);
+        acaoBotao(6);
     }//GEN-LAST:event_b6ActionPerformed
 
     private void b7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b7ActionPerformed
         // TODO add your handling code here:
-        acaoBotao(b7);
+        acaoBotao(7);
     }//GEN-LAST:event_b7ActionPerformed
 
     /**
