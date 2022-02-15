@@ -24,12 +24,12 @@ public class Servidor {
     private ConexaoChat chat2;
     private int movimentoJ1;
     private int movimentoJ2;
-    private boolean empate;
+    private boolean fimJogo;
     
     public Servidor(){
         System.out.println("----- Servidor -----");
         qtdJogadores = 0;
-        empate = false;
+        //empate = false;
         
         try {
             serverSocket = new ServerSocket(51734);
@@ -93,7 +93,7 @@ public class Servidor {
         public void run(){
             try{
                 saida.writeInt(idJogador);
-                saida.writeBoolean(empate);
+                //saida.writeBoolean(fimJogo);
                 saida.flush();
 
                 while(true){
@@ -107,7 +107,7 @@ public class Servidor {
                         jogador1.enviaJogadaAdversario(movimentoJ2);
                     }
  
-                    if(empate == true){
+                    if(fimJogo == true){
                         System.out.println("Fim de jogo.");
                         break;
                     }
