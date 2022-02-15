@@ -109,13 +109,119 @@ public class Jogador extends javax.swing.JFrame {
     }
     
     public void atualizaPecas(){
+        
+        switch (posicoes[0]) {
+            case 1:
+                b1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b1.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b1.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b1.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[1]) {
+            case 1:
+                b2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b2.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b2.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b2.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[2]) {
+            case 1:
+                b3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b3.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b3.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b3.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[3]) {
+            case 1:
+                b4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b4.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b4.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b4.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[4]) {
+            case 1:
+                b5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b5.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b5.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b5.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[5]) {
+            case 1:
+                b6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b6.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b6.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b6.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        
+        switch (posicoes[6]) {
+            case 1:
+                b7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+                b7.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelhaBloqueada.png")));
+                break;
+            case 2:
+                b7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+                b7.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzulBloqueada.png")));
+                break;
+            default:
+                b7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                b7.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+                break;
+        }
+        /*
         b1.setText("" + posicoes[0]);
         b2.setText("" + posicoes[1]);
         b3.setText("" + posicoes[2]);
         b4.setText("" + posicoes[3]);
         b5.setText("" + posicoes[4]);
         b6.setText("" + posicoes[5]);
-        b7.setText("" + posicoes[6]);
+        b7.setText("" + posicoes[6]);*/
     }
     
     public void mudancaBotoes(int valorComparacao, boolean estado){
@@ -406,6 +512,8 @@ public class Jogador extends javax.swing.JFrame {
         b5 = new javax.swing.JButton();
         b6 = new javax.swing.JButton();
         b7 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         msg_area = new javax.swing.JTextArea();
         txtMsg = new javax.swing.JTextField();
@@ -413,6 +521,8 @@ public class Jogador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tsoro Yematatu");
+        setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().setLayout(null);
 
         mensagem.setEditable(false);
         mensagem.setColumns(20);
@@ -422,132 +532,148 @@ public class Jogador extends javax.swing.JFrame {
         mensagem.setWrapStyleWord(true);
         jScrollPane1.setViewportView(mensagem);
 
-        b1.setText("1");
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(10, 11, 351, 30);
+
+        b1.setBackground(new java.awt.Color(204, 204, 204));
+        b1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b1.setBorderPainted(false);
+        b1.setContentAreaFilled(false);
+        b1.setFocusPainted(false);
         b1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b1ActionPerformed(evt);
             }
         });
+        getContentPane().add(b1);
+        b1.setBounds(150, 45, 50, 50);
 
-        b2.setText("2");
+        b2.setBackground(new java.awt.Color(204, 204, 204));
+        b2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b2.setBorderPainted(false);
+        b2.setContentAreaFilled(false);
+        b2.setFocusPainted(false);
         b2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b2ActionPerformed(evt);
             }
         });
+        getContentPane().add(b2);
+        b2.setBounds(80, 190, 50, 50);
 
-        b3.setText("3");
+        b3.setBackground(new java.awt.Color(204, 204, 204));
+        b3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b3.setBorderPainted(false);
+        b3.setContentAreaFilled(false);
+        b3.setFocusPainted(false);
         b3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b3ActionPerformed(evt);
             }
         });
+        getContentPane().add(b3);
+        b3.setBounds(150, 190, 50, 50);
 
-        b4.setText("4");
+        b4.setBackground(new java.awt.Color(204, 204, 204));
+        b4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b4.setBorderPainted(false);
+        b4.setContentAreaFilled(false);
+        b4.setFocusPainted(false);
         b4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b4ActionPerformed(evt);
             }
         });
+        getContentPane().add(b4);
+        b4.setBounds(230, 190, 50, 50);
 
-        b5.setText("5");
+        b5.setBackground(new java.awt.Color(204, 204, 204));
+        b5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b5.setBorderPainted(false);
+        b5.setContentAreaFilled(false);
+        b5.setFocusPainted(false);
         b5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b5ActionPerformed(evt);
             }
         });
+        getContentPane().add(b5);
+        b5.setBounds(30, 298, 50, 50);
 
-        b6.setText("6");
+        b6.setBackground(new java.awt.Color(204, 204, 204));
+        b6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b6.setBorderPainted(false);
+        b6.setContentAreaFilled(false);
+        b6.setFocusPainted(false);
         b6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b6ActionPerformed(evt);
             }
         });
+        getContentPane().add(b6);
+        b6.setBounds(150, 298, 50, 50);
 
-        b7.setText("7");
+        b7.setBackground(new java.awt.Color(204, 204, 204));
+        b7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
+        b7.setBorderPainted(false);
+        b7.setContentAreaFilled(false);
+        b7.setFocusPainted(false);
         b7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b7ActionPerformed(evt);
             }
         });
+        getContentPane().add(b7);
+        b7.setBounds(280, 298, 50, 50);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tabuleiro.png"))); // NOI18N
+        jLabel1.setText("jLabel1");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(10, 50, 320, 290);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         msg_area.setColumns(20);
         msg_area.setRows(5);
         jScrollPane2.setViewportView(msg_area);
 
-        btnSend.setText("Send");
+        btnSend.setText("Enviar");
         btnSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSendActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(b5)
-                                .addGap(94, 94, 94))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(b2)
-                                .addGap(54, 54, 54)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(b6)
-                                .addGap(89, 89, 89)
-                                .addComponent(b7)
-                                .addGap(36, 36, 36)
-                                .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSend))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(b3)
-                                        .addGap(58, 58, 58)
-                                        .addComponent(b4))
-                                    .addComponent(b1))
-                                .addGap(68, 68, 68)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(367, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtMsg)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSend)))
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(b1)
-                        .addGap(68, 68, 68)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(b3)
-                            .addComponent(b2)
-                            .addComponent(b4))
-                        .addGap(0, 55, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2))
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSend)
-                    .addComponent(b7)
-                    .addComponent(b6)
-                    .addComponent(b5))
-                .addGap(35, 35, 35))
+                    .addComponent(btnSend))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
-        pack();
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(0, 0, 620, 360);
+
+        setBounds(0, 0, 633, 395);
     }// </editor-fold>//GEN-END:initComponents
 
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
@@ -658,6 +784,8 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JButton b6;
     private javax.swing.JButton b7;
     private javax.swing.JButton btnSend;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea mensagem;
