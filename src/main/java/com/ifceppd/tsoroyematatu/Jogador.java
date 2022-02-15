@@ -181,12 +181,7 @@ public class Jogador extends javax.swing.JFrame {
             
             atualizaPecas();
         }else{
-            if(idJogador == 1 && empate == true){
-                checkWinner();
-            }else{
-                ativaBotoes = true;
-            }
-
+            ativaBotoes = true;
             atualizaTabuleiro();
         }
         
@@ -207,17 +202,26 @@ public class Jogador extends javax.swing.JFrame {
         
     }
     
-    private void checkWinner(){
+    private int[] vitoria1 = {0, 1, 4};
+    private int[] vitoria2 = {0, 2, 5};
+    private int[] vitoria3 = {0, 3, 6};
+    private int[] vitoria4 = {1, 2, 3};
+    private int[] vitoria5 = {4, 5, 6};
+    private int[][] vitorias = {vitoria1, vitoria2, vitoria3, vitoria4, vitoria5};
+    
+    private void verificaVencedor(){
         ativaBotoes = false;
-        /*if(myPoints > enemyPoints){
-            message.setText("You WON!\n" + "YOU: " + myPoints + "\n" + "ENEMY: " + enemyPoints);
-        } else if(myPoints < enemyPoints){
-            message.setText("You LOST!\n" + "YOU: " + myPoints + "\n" + "ENEMY: " + enemyPoints);
-        }else{
-            message.setText("It's a tie!\n" + "You both got " + myPoints + " points.");
-        }*/
         
-        cliente.fechaConexao();
+        for (int[] vitoria : vitorias) {
+            if(posicoes[vitoria[0]] != 0 && posicoes[vitoria[0]] == posicoes[vitoria[1]] &&
+                    posicoes[vitoria[1]] == posicoes[vitoria[2]]){
+                
+                mensagem.setText("Parabéns você venceu!");
+                //cliente.fechaConexao();
+            
+            }
+        }
+
     }
     
     private class ConexaoCliente {
@@ -347,17 +351,14 @@ public class Jogador extends javax.swing.JFrame {
             //System.out.println("My points: " + myPoints);
             cliente.enviaJogada(n);
 
-            if(idJogador == 2 && empate == true){
-                checkWinner();
-            }else{
-                Thread t = new Thread(new Runnable(){
-                    public void run(){
-                        controlaTurno();;
-                    }
-                });
-                t.start();
-
-            }
+            Thread t = new Thread(new Runnable(){
+                public void run(){
+                    controlaTurno();;
+                }
+            });
+            t.start();
+            
+            verificaVencedor();
         }
         
     }
@@ -499,6 +500,14 @@ public class Jogador extends javax.swing.JFrame {
                                 .addGap(54, 54, 54)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(b6)
+                                .addGap(89, 89, 89)
+                                .addComponent(b7)
+                                .addGap(36, 36, 36)
+                                .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSend))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(b3)
@@ -506,20 +515,11 @@ public class Jogador extends javax.swing.JFrame {
                                         .addComponent(b4))
                                     .addComponent(b1))
                                 .addGap(68, 68, 68)
-                                .addComponent(jScrollPane2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(b6)
-                                .addGap(107, 107, 107)
-                                .addComponent(b7)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSend)
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -535,21 +535,16 @@ public class Jogador extends javax.swing.JFrame {
                             .addComponent(b3)
                             .addComponent(b2)
                             .addComponent(b4))
-                        .addGap(0, 47, Short.MAX_VALUE))
+                        .addGap(0, 55, Short.MAX_VALUE))
                     .addComponent(jScrollPane2))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(b6)
-                            .addComponent(b5)
-                            .addComponent(b7)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSend))))
-                .addGap(26, 26, 26))
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSend)
+                    .addComponent(b7)
+                    .addComponent(b6)
+                    .addComponent(b5))
+                .addGap(35, 35, 35))
         );
 
         pack();
