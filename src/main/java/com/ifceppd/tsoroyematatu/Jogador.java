@@ -8,6 +8,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,6 +18,7 @@ import java.net.Socket;
 public class Jogador extends javax.swing.JFrame {
     
     private ConexaoCliente cliente;
+    private ConexaoChat chat;
     private int idJogador;
     private int outroJogador;
     private int[] posicoes;
@@ -34,7 +37,16 @@ public class Jogador extends javax.swing.JFrame {
         qtdPecasAdv = 0;
                 
         this.conectaServidor();
+        
         initComponents();
+        
+        Thread t2 = new Thread(new Runnable(){
+            public void run(){
+                atualizaChat();;
+            }
+        });
+        t2.start();
+        
         this.setTitle("Jogador #" + idJogador + " - Tsoro Yematatu");
         
         if(idJogador == 1){
@@ -53,7 +65,7 @@ public class Jogador extends javax.swing.JFrame {
             });
             t.start();
         }
-        
+
         atualizaTabuleiro();
         
     }
@@ -67,13 +79,7 @@ public class Jogador extends javax.swing.JFrame {
         b6.setEnabled(ativaBotoes);
         b7.setEnabled(ativaBotoes);
         
-        b1.setText("" + posicoes[0]);
-        b2.setText("" + posicoes[1]);
-        b3.setText("" + posicoes[2]);
-        b4.setText("" + posicoes[3]);
-        b5.setText("" + posicoes[4]);
-        b6.setText("" + posicoes[5]);
-        b7.setText("" + posicoes[6]);
+        atualizaPecas();
         
         if(posicoes[0] > 0){
             b1.setEnabled(false);
@@ -102,6 +108,16 @@ public class Jogador extends javax.swing.JFrame {
         }
     }
     
+    public void atualizaPecas(){
+        b1.setText("" + posicoes[0]);
+        b2.setText("" + posicoes[1]);
+        b3.setText("" + posicoes[2]);
+        b4.setText("" + posicoes[3]);
+        b5.setText("" + posicoes[4]);
+        b6.setText("" + posicoes[5]);
+        b7.setText("" + posicoes[6]);
+    }
+    
     public void mudancaBotoes(int valorComparacao, boolean estado){
         if(posicoes[0] == valorComparacao){
             b1.setEnabled(estado);
@@ -126,7 +142,8 @@ public class Jogador extends javax.swing.JFrame {
         }
     }
     
-    public void controlaTurno(){
+    int casaTroca;
+    public void controlaTurno(){        
         int n = cliente.recebeJogada();
         mensagem.setText("Seu adversário clicou o botão #" + n + ". Sua vez");
         
@@ -137,6 +154,20 @@ public class Jogador extends javax.swing.JFrame {
                 posicoes[n-1] = 1;
             }
             qtdPecasAdv++;
+        }else{
+            for (int i = 0; i < posicoes.length; i++) {
+                if(posicoes[i] == 0){
+                    casaTroca = i;
+                    break;
+                }
+            }
+            if(idJogador == 1){
+                posicoes[casaTroca] = 2;
+                posicoes[n-1] = 0;
+            }else{
+                posicoes[casaTroca] = 1;
+                posicoes[n-1] = 0;
+            }
         }
         
         if(qtdPecas == 3 && qtdPecasAdv == 3){
@@ -147,6 +178,8 @@ public class Jogador extends javax.swing.JFrame {
                 mudancaBotoes(2, true);
                 mudancaBotoes(1, false);
             }
+            
+            atualizaPecas();
         }else{
             if(idJogador == 1 && empate == true){
                 checkWinner();
@@ -157,6 +190,20 @@ public class Jogador extends javax.swing.JFrame {
             atualizaTabuleiro();
         }
         
+    }
+    
+    public void atualizaChat(){
+        
+        try {
+            String msgin = "";
+            while(!msgin.equals("exit")){
+                msgin = chat.din.readUTF();
+                //System.out.println("Server: " + msgin);
+                msg_area.setText(msg_area.getText() + "\n Adversario: " + msgin);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Jogador.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         
     }
     
@@ -226,41 +273,118 @@ public class Jogador extends javax.swing.JFrame {
         
     }
     
+    private class ConexaoChat {
+    
+        private Socket s;
+        private DataInputStream din;
+        private DataOutputStream dout;
+        
+        public ConexaoChat(){
+            try{
+                s = new Socket("localhost", 51738);
+                din = new DataInputStream(s.getInputStream());
+                dout = new DataOutputStream(s.getOutputStream());
+
+            } catch (IOException ex) {
+                System.out.println("Erro no construtor do chat");
+            }
+        }
+        
+        public void fechaConexao(){
+           try{
+                s.close();
+                System.out.println("-----CONEXÃO ENCERRADA-----");
+            } catch (IOException ex) {
+                System.out.println("Erro no fechaConexao() do ConexaoChat");
+            } 
+        }
+        
+    }
+    
     public void conectaServidor(){
         cliente = new ConexaoCliente();
+        chat = new ConexaoChat();
     }
     
     public void acaoBotao(int n){
-        
+        int casaTroca = 0;
+        boolean jogadaValida;
         if(qtdPecas < 3){
+            jogadaValida = true;
             if(idJogador == 1){
                 posicoes[n-1] = 1;
             }else{
                 posicoes[n-1] = 2;
             }
             qtdPecas++;
-        }
-        
-        mensagem.setText("You clicked button #" + n + ". Now wait for player #" + outroJogador);
-        
-        ativaBotoes = false;
-        atualizaTabuleiro();
-        
-        //myPoints += values[n - 1];
-        //System.out.println("My points: " + myPoints);
-        cliente.enviaJogada(n);
-        
-        if(idJogador == 2 && empate == true){
-            checkWinner();
         }else{
-            Thread t = new Thread(new Runnable(){
-                public void run(){
-                    controlaTurno();;
+            jogadaValida = validaJogada(n);
+            
+            for (int i = 0; i < posicoes.length; i++) {
+                if(posicoes[i] == 0){
+                    casaTroca = i;
                 }
-            });
-            t.start();
+            }
+            
+            if(jogadaValida){
+                if(idJogador == 1){
+                    posicoes[casaTroca] = 1;
+                    posicoes[n-1] = 0;
+                }else{
+                    posicoes[casaTroca] = 2;
+                    posicoes[n-1] = 0;
+                }
+            }
         }
         
+        if(jogadaValida){
+            mensagem.setText("Você clicou o botão #" + n + ". Agora a vez do jogador #" + outroJogador);
+
+            ativaBotoes = false;
+            atualizaTabuleiro();
+
+            //myPoints += values[n - 1];
+            //System.out.println("My points: " + myPoints);
+            cliente.enviaJogada(n);
+
+            if(idJogador == 2 && empate == true){
+                checkWinner();
+            }else{
+                Thread t = new Thread(new Runnable(){
+                    public void run(){
+                        controlaTurno();;
+                    }
+                });
+                t.start();
+
+            }
+        }
+        
+    }
+    
+    private int[] jogadas0 = {1, 2, 3, 4, 5, 6};
+    private int[] jogadas1 = {0, 2, 3, 4};
+    private int[] jogadas2 = {0, 1, 3, 5};
+    private int[] jogadas3 = {0, 1, 2, 6};
+    private int[] jogadas4 = {0, 1, 5, 6};
+    private int[] jogadas5 = {0, 2, 4, 6};
+    private int[] jogadas6 = {0, 3, 4, 5};
+    
+    private int[][] jogadasPossiveis = {jogadas0, jogadas1, jogadas2, jogadas3, 
+        jogadas4, jogadas5, jogadas6};
+    
+    public boolean validaJogada(int n){
+        boolean ehValido = false;
+        int[] jogada = jogadasPossiveis[n-1];
+        
+        for (int elemento : jogada) {
+            if(posicoes[elemento] == 0){
+                ehValido = true;
+                break;
+            }
+        }
+        
+        return ehValido;
     }
 
     /**
@@ -281,6 +405,10 @@ public class Jogador extends javax.swing.JFrame {
         b5 = new javax.swing.JButton();
         b6 = new javax.swing.JButton();
         b7 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        msg_area = new javax.swing.JTextArea();
+        txtMsg = new javax.swing.JTextField();
+        btnSend = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tsoro Yematatu");
@@ -342,6 +470,17 @@ public class Jogador extends javax.swing.JFrame {
             }
         });
 
+        msg_area.setColumns(20);
+        msg_area.setRows(5);
+        jScrollPane2.setViewportView(msg_area);
+
+        btnSend.setText("Send");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSendActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -349,50 +488,67 @@ public class Jogador extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(82, 82, 82)
-                                .addComponent(b2))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
-                                .addComponent(b5)))
-                        .addGap(60, 60, 60)
+                                .addComponent(b5)
+                                .addGap(94, 94, 94))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(b2)
+                                .addGap(54, 54, 54)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(b1)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(b3)
-                                        .addGap(65, 65, 65)
-                                        .addComponent(b4)))
-                                .addGap(0, 64, Short.MAX_VALUE))
+                                        .addGap(58, 58, 58)
+                                        .addComponent(b4))
+                                    .addComponent(b1))
+                                .addGap(68, 68, 68)
+                                .addComponent(jScrollPane2))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(b6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(107, 107, 107)
                                 .addComponent(b7)
-                                .addGap(17, 17, 17)))))
+                                .addGap(18, 18, 18)
+                                .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSend)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(b1)
-                .addGap(68, 68, 68)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b3)
-                    .addComponent(b2)
-                    .addComponent(b4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b6)
-                    .addComponent(b5)
-                    .addComponent(b7))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(b1)
+                        .addGap(68, 68, 68)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(b3)
+                            .addComponent(b2)
+                            .addComponent(b4))
+                        .addGap(0, 47, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(b6)
+                            .addComponent(b5)
+                            .addComponent(b7)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSend))))
                 .addGap(26, 26, 26))
         );
 
@@ -433,6 +589,18 @@ public class Jogador extends javax.swing.JFrame {
         // TODO add your handling code here:
         acaoBotao(7);
     }//GEN-LAST:event_b7ActionPerformed
+
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        // TODO add your handling code here:
+        try {
+            String msg = "";
+            msg = txtMsg.getText();
+            msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
+            chat.dout.writeUTF(msg);
+            txtMsg.setText("");
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -483,6 +651,7 @@ public class Jogador extends javax.swing.JFrame {
             }
         });
         
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -493,7 +662,11 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JButton b5;
     private javax.swing.JButton b6;
     private javax.swing.JButton b7;
+    private javax.swing.JButton btnSend;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea mensagem;
+    private static javax.swing.JTextArea msg_area;
+    private javax.swing.JTextField txtMsg;
     // End of variables declaration//GEN-END:variables
 }

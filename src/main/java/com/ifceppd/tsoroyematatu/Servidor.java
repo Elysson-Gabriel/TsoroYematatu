@@ -16,9 +16,12 @@ import java.net.*;
 public class Servidor {
     
     private ServerSocket serverSocket;
+    private ServerSocket chat;
     private int qtdJogadores;
     private ConexaoServidor jogador1;
     private ConexaoServidor jogador2;
+    private ConexaoChat chat1;
+    private ConexaoChat chat2;
     private int movimentoJ1;
     private int movimentoJ2;
     private boolean empate;
@@ -30,6 +33,7 @@ public class Servidor {
         
         try {
             serverSocket = new ServerSocket(51734);
+            chat = new ServerSocket(51738);
         } catch (IOException ex) {
             System.out.println("Erro no construtor do servidor");
         }
@@ -44,14 +48,22 @@ public class Servidor {
                 System.out.println("Jogador #" + qtdJogadores + " se conectou");
                 ConexaoServidor jogador = new ConexaoServidor(socket, qtdJogadores);
                 
-                if(qtdJogadores == 1){
-                    jogador1 = jogador;
-                }else{
-                    jogador2 = jogador;
-                }
-                
                 Thread t = new Thread(jogador);
                 t.start();
+                
+                Socket s = chat.accept();
+                ConexaoChat chat = new ConexaoChat(s, qtdJogadores);
+                
+                if(qtdJogadores == 1){
+                    jogador1 = jogador;
+                    chat1 = chat;
+                }else{
+                    jogador2 = jogador;
+                    chat2 = chat;
+                }
+                
+                Thread t2 = new Thread(chat);
+                t2.start();
             }
             System.out.println("Os 2 jogadores já se conectaram.");
         } catch (IOException ex) {
@@ -119,6 +131,70 @@ public class Servidor {
         public void fechaConexao(){
            try{
                 socket.close();
+                System.out.println("-----CONEXÃO ENCERRADA-----");
+            } catch (IOException ex) {
+                System.out.println("Erro no fechaConexao() do Servidor");
+            } 
+        }
+    
+    }
+    
+    private class ConexaoChat implements Runnable {
+    
+        private ServerSocket ss;
+        private Socket s;
+        private DataInputStream din;
+        private DataOutputStream dout;
+        private int idJogador;
+
+        public ConexaoChat(Socket socket, int idJogador){
+            this.s = socket;
+            this.idJogador = idJogador;
+
+            try {
+                din = new DataInputStream(socket.getInputStream());
+                dout = new DataOutputStream(socket.getOutputStream());
+            } catch (IOException ex) {
+                System.out.println("Erro no run do jogador");
+            }
+       
+        }
+
+        public void run(){
+            try{
+                //dout.writeInt(idJogador);
+                //dout.flush();
+                
+                String msgin = "";
+                while(!msgin.equals("exit")){
+                    msgin = din.readUTF();
+                    //System.out.println("Client: " + msgin);
+                    if(idJogador == 1){
+                        chat2.enviaMsgAdversario(msgin);
+                    }else{
+                        chat1.enviaMsgAdversario(msgin);
+                    }
+                }
+                
+                chat1.fechaConexao();
+                chat2.fechaConexao();
+            } catch (IOException ex) {
+                System.out.println("Erro no run do ConexaoChat");
+            }
+        }
+        
+        public void enviaMsgAdversario(String msg){
+            try{
+                dout.writeUTF(msg);
+                dout.flush();
+            } catch (IOException ex) {
+                System.out.println("Erro no enviaMsgAdversario() do Servidor");
+            }
+        }
+        
+        public void fechaConexao(){
+           try{
+                s.close();
                 System.out.println("-----CONEXÃO ENCERRADA-----");
             } catch (IOException ex) {
                 System.out.println("Erro no fechaConexao() do Servidor");
