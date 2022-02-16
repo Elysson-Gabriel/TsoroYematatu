@@ -166,6 +166,7 @@ public class Servidor {
                 //dout.flush();
                 
                 String msgin = "";
+                
                 while(!msgin.equals("exit")){
                     msgin = din.readUTF();
                     //System.out.println("Client: " + msgin);

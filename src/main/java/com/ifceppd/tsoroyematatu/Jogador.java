@@ -4,6 +4,7 @@
  */
 package com.ifceppd.tsoroyematatu;
 
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -54,10 +55,14 @@ public class Jogador extends javax.swing.JFrame {
         
         if(idJogador == 1){
             mensagem.setText("Jogador #1. Inicie a partida.");
+            Color vermelho = new Color(0xdb3c30);
+            mensagem.setBackground(vermelho);
             outroJogador = 2;
             ativaBotoes = true;
         }else{
             mensagem.setText("Jogador #2. Aguarde seu turno.");
+            Color azul = new Color(0x3394e8);
+            mensagem.setBackground(azul);
             outroJogador = 1;
             ativaBotoes = false;
             
@@ -309,9 +314,11 @@ public class Jogador extends javax.swing.JFrame {
                     mudancaBotoes(0, false);
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
+                    fimJogo = true;
                 }else if(msgin.equals("/e") && !fimJogo){
                     if(solicitouEmpate){
-                        msg_area.setText(msg_area.getText() + "\n Jogadores concordaram com empate.");
+                        msg_area.setText(msg_area.getText() + "\n Jogadores concordaram com empate.\n Fim de jogo.");
+                        mensagem.setText("Fim de jogo! Jogadores concordaram com empate. ");
                         mudancaBotoes(0, false);
                         mudancaBotoes(1, false);
                         mudancaBotoes(2, false);
@@ -323,6 +330,7 @@ public class Jogador extends javax.swing.JFrame {
                     }
                 }else if(msgin.equals("/f")){
                     msg_area.setText(msg_area.getText() + "\n Fim de jogo. Você perdeu!");
+                    mensagem.setText("Fim de jogo! Você perdeu.");
                     mudancaBotoes(0, false);
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
@@ -509,6 +517,22 @@ public class Jogador extends javax.swing.JFrame {
         
     }
     
+    public void mudaParaVazio(javax.swing.JButton botao){
+        if(qtdPecas < 3){
+            botao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png")));
+        }
+    }
+    
+    public void mudaCorBotao(javax.swing.JButton botao){
+        if(qtdPecas < 3){
+            if(idJogador == 1){
+                botao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaVermelha.png")));
+            }else{
+                botao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pecaAzul.png")));
+            }
+        }
+    }
+    
     private int[] jogadas0 = {1, 2, 3, 4, 5, 6};
     private int[] jogadas1 = {0, 2, 3, 4};
     private int[] jogadas2 = {0, 1, 3, 5};
@@ -532,6 +556,32 @@ public class Jogador extends javax.swing.JFrame {
         }
         
         return ehValido;
+    }
+    
+    public void enviarMensagemChat(){
+        try {
+            String msg = "";
+            msg = txtMsg.getText();
+            msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
+            if(msg.equals("/d") && !fimJogo){
+                msg_area.setText(msg_area.getText() + "\n Você desistiu! Seu adversario venceu.");
+                mensagem.setText("Você desistiu! Seu adversario venceu.");
+                mudancaBotoes(0, false);
+                mudancaBotoes(1, false);
+                mudancaBotoes(2, false);
+                fimJogo = true;
+            }else if(msg.equals("/e") && !fimJogo){
+                if(solicitouEmpate){
+                    msg_area.setText(msg_area.getText() + "\n Aguarde o adversário concordar com empate.");
+                }else if(!fimJogo){
+                    solicitouEmpate = true;
+                    msg_area.setText(msg_area.getText() + "\n Você solicitou empate ao adversário.");
+                }
+            }
+            chat.dout.writeUTF(msg);
+            txtMsg.setText("");
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -559,7 +609,6 @@ public class Jogador extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mensagem = new javax.swing.JTextArea();
 
@@ -573,6 +622,14 @@ public class Jogador extends javax.swing.JFrame {
         b1.setBorderPainted(false);
         b1.setContentAreaFilled(false);
         b1.setFocusPainted(false);
+        b1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b1MouseExited(evt);
+            }
+        });
         b1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b1ActionPerformed(evt);
@@ -586,19 +643,35 @@ public class Jogador extends javax.swing.JFrame {
         b2.setBorderPainted(false);
         b2.setContentAreaFilled(false);
         b2.setFocusPainted(false);
+        b2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b2MouseExited(evt);
+            }
+        });
         b2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b2ActionPerformed(evt);
             }
         });
         getContentPane().add(b2);
-        b2.setBounds(80, 190, 50, 50);
+        b2.setBounds(75, 190, 50, 50);
 
         b3.setBackground(new java.awt.Color(204, 204, 204));
         b3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
         b3.setBorderPainted(false);
         b3.setContentAreaFilled(false);
         b3.setFocusPainted(false);
+        b3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b3MouseExited(evt);
+            }
+        });
         b3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b3ActionPerformed(evt);
@@ -612,19 +685,35 @@ public class Jogador extends javax.swing.JFrame {
         b4.setBorderPainted(false);
         b4.setContentAreaFilled(false);
         b4.setFocusPainted(false);
+        b4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b4MouseExited(evt);
+            }
+        });
         b4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b4ActionPerformed(evt);
             }
         });
         getContentPane().add(b4);
-        b4.setBounds(230, 190, 50, 50);
+        b4.setBounds(225, 190, 50, 50);
 
         b5.setBackground(new java.awt.Color(204, 204, 204));
         b5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/espacoVazio.png"))); // NOI18N
         b5.setBorderPainted(false);
         b5.setContentAreaFilled(false);
         b5.setFocusPainted(false);
+        b5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b5MouseExited(evt);
+            }
+        });
         b5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b5ActionPerformed(evt);
@@ -638,6 +727,14 @@ public class Jogador extends javax.swing.JFrame {
         b6.setBorderPainted(false);
         b6.setContentAreaFilled(false);
         b6.setFocusPainted(false);
+        b6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b6MouseExited(evt);
+            }
+        });
         b6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b6ActionPerformed(evt);
@@ -651,6 +748,14 @@ public class Jogador extends javax.swing.JFrame {
         b7.setBorderPainted(false);
         b7.setContentAreaFilled(false);
         b7.setFocusPainted(false);
+        b7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                b7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                b7MouseExited(evt);
+            }
+        });
         b7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 b7ActionPerformed(evt);
@@ -670,6 +775,12 @@ public class Jogador extends javax.swing.JFrame {
         msg_area.setRows(5);
         jScrollPane2.setViewportView(msg_area);
 
+        txtMsg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMsgKeyPressed(evt);
+            }
+        });
+
         btnSend.setText("Enviar");
         btnSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -683,10 +794,11 @@ public class Jogador extends javax.swing.JFrame {
 
         jLabel4.setText("/e - Solicitar ou concordar empate");
 
-        jLabel5.setText("/r - Reinicar a partida");
-
         mensagem.setEditable(false);
+        mensagem.setBackground(new java.awt.Color(0, 0, 0));
         mensagem.setColumns(20);
+        mensagem.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
+        mensagem.setForeground(new java.awt.Color(255, 255, 255));
         mensagem.setLineWrap(true);
         mensagem.setRows(1);
         mensagem.setText("Tsoro Yematatu");
@@ -700,8 +812,8 @@ public class Jogador extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -714,10 +826,9 @@ public class Jogador extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -725,8 +836,8 @@ public class Jogador extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -737,9 +848,7 @@ public class Jogador extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1);
@@ -785,29 +894,85 @@ public class Jogador extends javax.swing.JFrame {
 
     private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
         // TODO add your handling code here:
-        try {
-            String msg = "";
-            msg = txtMsg.getText();
-            msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
-            if(msg.equals("/d") && !fimJogo){
-                msg_area.setText(msg_area.getText() + "\n Você desistiu! Seu adversario venceu.");
-                mensagem.setText("Você desistiu! Seu adversario venceu.");
-                mudancaBotoes(0, false);
-                mudancaBotoes(1, false);
-                mudancaBotoes(2, false);
-            }else if(msg.equals("/e") && !fimJogo){
-                if(solicitouEmpate){
-                    msg_area.setText(msg_area.getText() + "\n Aguarde o adversário concordar com empate.");
-                }else if(!fimJogo){
-                    solicitouEmpate = true;
-                    msg_area.setText(msg_area.getText() + "\n Você solicitou empate ao adversário.");
-                }
-            }
-            chat.dout.writeUTF(msg);
-            txtMsg.setText("");
-        } catch (Exception e) {
-        }
+        enviarMensagemChat();
     }//GEN-LAST:event_btnSendActionPerformed
+
+    private void txtMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMsgKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == evt.VK_ENTER){
+            enviarMensagemChat();
+        }
+    }//GEN-LAST:event_txtMsgKeyPressed
+
+    private void b1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b1MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b1);
+    }//GEN-LAST:event_b1MouseEntered
+
+    private void b1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b1MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b1);
+    }//GEN-LAST:event_b1MouseExited
+
+    private void b2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b2MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b2);
+    }//GEN-LAST:event_b2MouseEntered
+
+    private void b2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b2MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b2);
+    }//GEN-LAST:event_b2MouseExited
+
+    private void b3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b3MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b3);
+    }//GEN-LAST:event_b3MouseEntered
+
+    private void b3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b3MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b3);
+    }//GEN-LAST:event_b3MouseExited
+
+    private void b4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b4MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b4);
+    }//GEN-LAST:event_b4MouseEntered
+
+    private void b4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b4MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b4);
+    }//GEN-LAST:event_b4MouseExited
+
+    private void b5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b5MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b5);
+    }//GEN-LAST:event_b5MouseEntered
+
+    private void b5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b5MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b5);
+    }//GEN-LAST:event_b5MouseExited
+
+    private void b6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b6MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b6);
+    }//GEN-LAST:event_b6MouseEntered
+
+    private void b6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b6MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b6);
+    }//GEN-LAST:event_b6MouseExited
+
+    private void b7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b7MouseEntered
+        // TODO add your handling code here:
+        mudaCorBotao(b7);
+    }//GEN-LAST:event_b7MouseEntered
+
+    private void b7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b7MouseExited
+        // TODO add your handling code here:
+        mudaParaVazio(b7);
+    }//GEN-LAST:event_b7MouseExited
 
     /**
      * @param args the command line arguments
@@ -874,7 +1039,6 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
