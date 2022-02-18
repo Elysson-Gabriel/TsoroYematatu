@@ -119,6 +119,7 @@ public class Servidor {
                 jogador2.fechaConexao();
             } catch (IOException ex) {
                 System.out.println("Erro no run do jogador");
+                System.exit(0);
             }
         }
         

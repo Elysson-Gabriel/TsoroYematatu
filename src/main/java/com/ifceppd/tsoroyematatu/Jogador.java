@@ -54,15 +54,15 @@ public class Jogador extends javax.swing.JFrame {
         this.setTitle("Jogador #" + idJogador + " - Tsoro Yematatu");
         
         if(idJogador == 1){
-            mensagem.setText("Jogador #1. Aguarde o Jogador #2 se conectar.");
+            titulo.setText("Jogador #1. Aguarde o Jogador #2 se conectar.");
             Color vermelho = new Color(0xdb3c30);
-            mensagem.setBackground(vermelho);
+            titulo.setBackground(vermelho);
             outroJogador = 2;
             ativaBotoes = false;
         }else{
-            mensagem.setText("Jogador #2. Aguarde seu turno.");
+            titulo.setText("Jogador #2. Aguarde seu turno.");
             Color azul = new Color(0x3394e8);
-            mensagem.setBackground(azul);
+            titulo.setBackground(azul);
             outroJogador = 1;
             ativaBotoes = false;
             
@@ -259,7 +259,7 @@ public class Jogador extends javax.swing.JFrame {
     int casaTroca;
     public void controlaTurno(){        
         int n = cliente.recebeJogada();
-        mensagem.setText("Seu adversário clicou o botão #" + n + ". Sua vez");
+        titulo.setText("Seu adversário clicou o botão #" + n + ". Sua vez");
         
         if(qtdPecasAdv < 3){
             if(idJogador == 1){
@@ -309,16 +309,16 @@ public class Jogador extends javax.swing.JFrame {
                 msgin = chat.din.readUTF();
                 //System.out.println("Server: " + msgin);
                 if(msgin.equals("/d") && !fimJogo){
-                    msg_area.setText(msg_area.getText() + "\n Você venceu! Seu adversario desistiu.");
-                    mensagem.setText("Você venceu! Seu adversario desistiu.");
+                    chatArea.setText(chatArea.getText() + "\n Você venceu! Seu adversario desistiu.");
+                    titulo.setText("Você venceu! Seu adversario desistiu.");
                     mudancaBotoes(0, false);
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
                     fimJogo = true;
                 }else if(msgin.equals("/e") && !fimJogo){
                     if(solicitouEmpate){
-                        msg_area.setText(msg_area.getText() + "\n Jogadores concordaram com empate.\n Fim de jogo.");
-                        mensagem.setText("Fim de jogo! Jogadores concordaram com empate. ");
+                        chatArea.setText(chatArea.getText() + "\n Jogadores concordaram com empate.\n Fim de jogo.");
+                        titulo.setText("Fim de jogo! Jogadores concordaram com empate. ");
                         mudancaBotoes(0, false);
                         mudancaBotoes(1, false);
                         mudancaBotoes(2, false);
@@ -326,11 +326,11 @@ public class Jogador extends javax.swing.JFrame {
                         solicitouEmpate = false;
                         fimJogo = true;
                     }else {
-                        msg_area.setText(msg_area.getText() + "\n Seu adversário solicitou empate\n Envie /e para aceitar.");
+                        chatArea.setText(chatArea.getText() + "\n Seu adversário solicitou empate\n Envie /e para aceitar.");
                     }
                 }else if(msgin.equals("/f")){
-                    msg_area.setText(msg_area.getText() + "\n Fim de jogo. Você perdeu!");
-                    mensagem.setText("Fim de jogo! Você perdeu.");
+                    chatArea.setText(chatArea.getText() + "\n Fim de jogo. Você perdeu!");
+                    titulo.setText("Fim de jogo! Você perdeu.");
                     mudancaBotoes(0, false);
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
@@ -339,17 +339,18 @@ public class Jogador extends javax.swing.JFrame {
                     if(idJogador == 1){
                         ativaBotoes = true;
                         atualizaTabuleiro();
-                        mensagem.setText("Jogador #1. Inicie a partida!");
-                        msg_area.setText("Jogador #2 se conectou.");
+                        titulo.setText("Jogador #1. Inicie a partida!");
+                        chatArea.setText("Jogador #2 se conectou.");
                     }
                 }
                 else{
-                    msg_area.setText(msg_area.getText() + "\n Adversario: " + msgin);
+                    chatArea.setText(chatArea.getText() + "\n Adversario: " + msgin);
                 }
                 
             }
         } catch (IOException ex) {
-            Logger.getLogger(Jogador.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro no atualizaChat() do cliente");
+            System.exit(0);
         } 
         
     }
@@ -369,7 +370,7 @@ public class Jogador extends javax.swing.JFrame {
                     posicoes[vitoria[1]] == posicoes[vitoria[2]]){
                 
                 try {
-                    mensagem.setText("Parabéns você venceu!");
+                    titulo.setText("Parabéns você venceu!");
                     mudancaBotoes(0, false);
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
@@ -503,7 +504,7 @@ public class Jogador extends javax.swing.JFrame {
         }
         
         if(jogadaValida){
-            mensagem.setText("Você clicou o botão #" + n + ". Agora a vez do jogador #" + outroJogador);
+            titulo.setText("Você clicou o botão #" + n + ". Agora a vez do jogador #" + outroJogador);
 
             ativaBotoes = false;
             atualizaTabuleiro();
@@ -568,27 +569,27 @@ public class Jogador extends javax.swing.JFrame {
     public void enviarMensagemChat(){
         try {
             String msg = "";
-            msg = txtMsg.getText();
+            msg = mensagem.getText();
             
             if(msg.equals("/d") && !fimJogo){
-                msg_area.setText(msg_area.getText() + "\n Você desistiu! Seu adversario venceu.");
-                mensagem.setText("Você desistiu! Seu adversario venceu.");
+                chatArea.setText(chatArea.getText() + "\n Você desistiu! Seu adversario venceu.");
+                titulo.setText("Você desistiu! Seu adversario venceu.");
                 mudancaBotoes(0, false);
                 mudancaBotoes(1, false);
                 mudancaBotoes(2, false);
                 fimJogo = true;
             }else if(msg.equals("/e") && !fimJogo){
                 if(solicitouEmpate){
-                    msg_area.setText(msg_area.getText() + "\n Aguarde o adversário concordar com empate.");
+                    chatArea.setText(chatArea.getText() + "\n Aguarde o adversário concordar com empate.");
                 }else if(!fimJogo){
                     solicitouEmpate = true;
-                    msg_area.setText(msg_area.getText() + "\n Você solicitou empate ao adversário.");
+                    chatArea.setText(chatArea.getText() + "\n Você solicitou empate ao adversário.");
                 }
             }else if(!msg.isBlank()){
-                msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
+                chatArea.setText(chatArea.getText() + "\n Eu: " + msg);
             }
             chat.dout.writeUTF(msg);
-            txtMsg.setText("");
+            mensagem.setText("");
         } catch (Exception e) {
         }
     }
@@ -612,14 +613,14 @@ public class Jogador extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        msg_area = new javax.swing.JTextArea();
-        txtMsg = new javax.swing.JTextField();
-        btnSend = new javax.swing.JButton();
+        chatArea = new javax.swing.JTextArea();
+        mensagem = new javax.swing.JTextField();
+        enviar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        mensagem = new javax.swing.JTextArea();
+        titulo = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tsoro Yematatu");
@@ -780,20 +781,20 @@ public class Jogador extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        msg_area.setColumns(20);
-        msg_area.setRows(5);
-        jScrollPane2.setViewportView(msg_area);
+        chatArea.setColumns(20);
+        chatArea.setRows(5);
+        jScrollPane2.setViewportView(chatArea);
 
-        txtMsg.addKeyListener(new java.awt.event.KeyAdapter() {
+        mensagem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtMsgKeyPressed(evt);
+                mensagemKeyPressed(evt);
             }
         });
 
-        btnSend.setText("Enviar");
-        btnSend.addActionListener(new java.awt.event.ActionListener() {
+        enviar.setText("Enviar");
+        enviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSendActionPerformed(evt);
+                enviarActionPerformed(evt);
             }
         });
 
@@ -803,43 +804,40 @@ public class Jogador extends javax.swing.JFrame {
 
         jLabel4.setText("/e - Solicitar ou concordar empate");
 
-        mensagem.setEditable(false);
-        mensagem.setBackground(new java.awt.Color(0, 0, 0));
-        mensagem.setColumns(20);
-        mensagem.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
-        mensagem.setForeground(new java.awt.Color(255, 255, 255));
-        mensagem.setLineWrap(true);
-        mensagem.setRows(1);
-        mensagem.setText("Tsoro Yematatu");
-        mensagem.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(mensagem);
+        titulo.setEditable(false);
+        titulo.setBackground(new java.awt.Color(0, 0, 0));
+        titulo.setColumns(20);
+        titulo.setFont(new java.awt.Font("Arial Black", 1, 11)); // NOI18N
+        titulo.setForeground(new java.awt.Color(255, 255, 255));
+        titulo.setLineWrap(true);
+        titulo.setRows(1);
+        titulo.setText("Tsoro Yematatu");
+        titulo.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(titulo);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(341, 341, 341)
+                        .addComponent(mensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(enviar))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(341, 341, 341)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(206, 206, 206)
-                                .addComponent(btnSend))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -849,8 +847,8 @@ public class Jogador extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMsg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSend))
+                    .addComponent(mensagem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(enviar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -863,7 +861,7 @@ public class Jogador extends javax.swing.JFrame {
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 620, 380);
 
-        setBounds(0, 0, 633, 419);
+        setBounds(0, 0, 635, 419);
     }// </editor-fold>//GEN-END:initComponents
 
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
@@ -901,17 +899,17 @@ public class Jogador extends javax.swing.JFrame {
         acaoBotao(7);
     }//GEN-LAST:event_b7ActionPerformed
 
-    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+    private void enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarActionPerformed
         // TODO add your handling code here:
         enviarMensagemChat();
-    }//GEN-LAST:event_btnSendActionPerformed
+    }//GEN-LAST:event_enviarActionPerformed
 
-    private void txtMsgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMsgKeyPressed
+    private void mensagemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mensagemKeyPressed
         // TODO add your handling code here:
         if(evt.getKeyCode() == evt.VK_ENTER){
             enviarMensagemChat();
         }
-    }//GEN-LAST:event_txtMsgKeyPressed
+    }//GEN-LAST:event_mensagemKeyPressed
 
     private void b1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_b1MouseEntered
         // TODO add your handling code here:
@@ -1043,7 +1041,8 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JButton b5;
     private javax.swing.JButton b6;
     private javax.swing.JButton b7;
-    private javax.swing.JButton btnSend;
+    private static javax.swing.JTextArea chatArea;
+    private javax.swing.JButton enviar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1051,8 +1050,7 @@ public class Jogador extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea mensagem;
-    private static javax.swing.JTextArea msg_area;
-    private javax.swing.JTextField txtMsg;
+    private javax.swing.JTextField mensagem;
+    private javax.swing.JTextArea titulo;
     // End of variables declaration//GEN-END:variables
 }
