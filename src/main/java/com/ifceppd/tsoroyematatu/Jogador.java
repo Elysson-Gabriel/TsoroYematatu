@@ -54,11 +54,11 @@ public class Jogador extends javax.swing.JFrame {
         this.setTitle("Jogador #" + idJogador + " - Tsoro Yematatu");
         
         if(idJogador == 1){
-            mensagem.setText("Jogador #1. Inicie a partida.");
+            mensagem.setText("Jogador #1. Aguarde o Jogador #2 se conectar.");
             Color vermelho = new Color(0xdb3c30);
             mensagem.setBackground(vermelho);
             outroJogador = 2;
-            ativaBotoes = true;
+            ativaBotoes = false;
         }else{
             mensagem.setText("Jogador #2. Aguarde seu turno.");
             Color azul = new Color(0x3394e8);
@@ -325,7 +325,7 @@ public class Jogador extends javax.swing.JFrame {
                         chat.dout.writeUTF("/e");
                         solicitouEmpate = false;
                         fimJogo = true;
-                    }else if(!fimJogo){
+                    }else {
                         msg_area.setText(msg_area.getText() + "\n Seu adversário solicitou empate\n Envie /e para aceitar.");
                     }
                 }else if(msgin.equals("/f")){
@@ -335,6 +335,13 @@ public class Jogador extends javax.swing.JFrame {
                     mudancaBotoes(1, false);
                     mudancaBotoes(2, false);
                     fimJogo = true;
+                }else if(msgin.equals("/i")){
+                    if(idJogador == 1){
+                        ativaBotoes = true;
+                        atualizaTabuleiro();
+                        mensagem.setText("Jogador #1. Inicie a partida!");
+                        msg_area.setText("Jogador #2 se conectou.");
+                    }
                 }
                 else{
                     msg_area.setText(msg_area.getText() + "\n Adversario: " + msgin);
@@ -562,7 +569,7 @@ public class Jogador extends javax.swing.JFrame {
         try {
             String msg = "";
             msg = txtMsg.getText();
-            msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
+            
             if(msg.equals("/d") && !fimJogo){
                 msg_area.setText(msg_area.getText() + "\n Você desistiu! Seu adversario venceu.");
                 mensagem.setText("Você desistiu! Seu adversario venceu.");
@@ -577,6 +584,8 @@ public class Jogador extends javax.swing.JFrame {
                     solicitouEmpate = true;
                     msg_area.setText(msg_area.getText() + "\n Você solicitou empate ao adversário.");
                 }
+            }else if(!msg.isBlank()){
+                msg_area.setText(msg_area.getText() + "\n Eu: " + msg);
             }
             chat.dout.writeUTF(msg);
             txtMsg.setText("");

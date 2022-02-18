@@ -65,7 +65,10 @@ public class Servidor {
                 Thread t2 = new Thread(chat);
                 t2.start();
             }
+            
             System.out.println("Os 2 jogadores já se conectaram.");
+            
+            chat1.enviaMsgAdversario("/i");
         } catch (IOException ex) {
             System.out.println("Erro em permiteConexoes()");
         }
@@ -170,10 +173,12 @@ public class Servidor {
                 while(!msgin.equals("exit")){
                     msgin = din.readUTF();
                     //System.out.println("Client: " + msgin);
-                    if(idJogador == 1){
-                        chat2.enviaMsgAdversario(msgin);
-                    }else{
-                        chat1.enviaMsgAdversario(msgin);
+                    if(jogador2 != null){
+                        if(idJogador == 1){
+                            chat2.enviaMsgAdversario(msgin);
+                        }else{
+                            chat1.enviaMsgAdversario(msgin);
+                        }
                     }
                 }
                 
