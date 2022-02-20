@@ -115,7 +115,6 @@ public class Jogador extends javax.swing.JFrame {
             mudancaBotoes(0, false);
         }
         
-        verificaVencedor();
     }
     
     public void atualizaPecas(){
@@ -522,6 +521,7 @@ public class Jogador extends javax.swing.JFrame {
             });
             t.start();
             
+            verificaVencedor();
         }
         
     }
