@@ -114,6 +114,8 @@ public class Jogador extends javax.swing.JFrame {
         if(qtdPecas == 3 && qtdPecasAdv == 3){
             mudancaBotoes(0, false);
         }
+        
+        verificaVencedor();
     }
     
     public void atualizaPecas(){
@@ -520,7 +522,6 @@ public class Jogador extends javax.swing.JFrame {
             });
             t.start();
             
-            verificaVencedor();
         }
         
     }
