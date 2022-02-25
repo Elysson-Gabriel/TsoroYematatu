@@ -344,10 +344,10 @@ public class Jogador extends javax.swing.JFrame {
                         chatArea.setText("Jogador #2 se conectou.");
                     }
                 }
-                else{
+                else if(!msgin.isBlank()){
                     chatArea.setText(chatArea.getText() + "\n Adversario: " + msgin);
                 }
-                
+                chatArea.setCaretPosition(chatArea.getText().length());
             }
         } catch (IOException ex) {
             System.out.println("Erro no atualizaChat() do cliente");
