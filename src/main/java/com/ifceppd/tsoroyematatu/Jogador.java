@@ -623,6 +623,7 @@ public class Jogador extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tsoro Yematatu");
         setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
         getContentPane().setLayout(null);
 
         b1.setBackground(new java.awt.Color(204, 204, 204));
