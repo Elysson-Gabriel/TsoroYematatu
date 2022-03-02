@@ -576,6 +576,7 @@ public class Jogador extends javax.swing.JFrame {
                 msg = entrada.readUTF();
             } catch (IOException ex) {
                 System.out.println("Erro no recebeMensagem() do Cliente");
+                System.exit(0);
             }
             
             return msg;
