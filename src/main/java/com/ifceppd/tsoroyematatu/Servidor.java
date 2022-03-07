@@ -25,6 +25,7 @@ public class Servidor extends UnicastRemoteObject implements Servico{
     public Servidor() throws RemoteException{
         super();
         System.out.println("----- Servidor -----");
+        //Inicializa variáveis usada para comunicação entre os clientes
         qtdJogadores = 0;
         movimentoJ1 = -1;
         movimentoJ2 = -1;
@@ -90,6 +91,7 @@ public class Servidor extends UnicastRemoteObject implements Servico{
                 /* Após os dois jogadores se conectarem, o primeiro jogador a se conectar
                   recebe uma mensagem "/i" que permite o início do jogo*/
                 enviaMensagem("/i", 2);
+                qtdJogadores = 0;
             }
             
             return qtdJogadores;
@@ -110,7 +112,7 @@ public class Servidor extends UnicastRemoteObject implements Servico{
             Naming.rebind(localizacao, servidor);
             System.out.println("Aguardando Clientes!");
         } catch (RemoteException ex) {
-            System.out.println("Erro:" + ex.getMessage());
+            System.out.println("Erro no servidor:" + ex.getMessage());
         } catch (MalformedURLException ex) {
             System.out.println("Erro de url mal formado:" + ex.getMessage());
         }

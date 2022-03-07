@@ -65,7 +65,7 @@ public class Jogador extends javax.swing.JFrame {
             servico = (Servico) Naming.lookup(localizacao);
             idJogador = servico.recebeIdJogador();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro no construtor do jogador: " + e.getMessage());
         }
         
         //Conexão para o jogo e para o chat
@@ -292,7 +292,7 @@ public class Jogador extends javax.swing.JFrame {
         try {
             n = servico.recebeJogada(outroJogador);
         } catch (RemoteException e) {
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro no controlaTurno do jogador: " + e.getMessage());
         }
         
         if(n != -1){
@@ -334,6 +334,13 @@ public class Jogador extends javax.swing.JFrame {
                 ativaBotoes = true;
                 atualizaEstadoBotoes();
             }
+        }else{//Executa a Thread novamente enquanto não recebe jogada do adversário
+            Thread t = new Thread(new Runnable(){
+                public void run(){
+                    controlaTurno();;
+                }
+            });
+            t.start();
         }
         
     }
@@ -357,7 +364,7 @@ public class Jogador extends javax.swing.JFrame {
             try {
                 msgRecebida = servico.recebeMensagem(outroJogador);
             } catch (RemoteException e) {
-                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Erro no executaChat do jogador: " + e.getMessage());
             }
             if(msgRecebida.equals("/d") && !fimJogo){
                 chatArea.setText(chatArea.getText() + "\n Você venceu! Seu adversario desistiu.");
@@ -373,7 +380,7 @@ public class Jogador extends javax.swing.JFrame {
                     try {
                         servico.enviaMensagem("/e", idJogador);
                     } catch (RemoteException e) {
-                        JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                        JOptionPane.showMessageDialog(null, "Erro no executaChat do jogador: " + e.getMessage());
                     }
                     
                     solicitouEmpate = false;
@@ -416,7 +423,7 @@ public class Jogador extends javax.swing.JFrame {
                 try {
                     servico.enviaMensagem("/f", idJogador);
                 } catch (RemoteException e) {
-                    JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                    JOptionPane.showMessageDialog(null, "Erro no verificaVencedor do jogador: " + e.getMessage());
                 }
             }
         }
@@ -460,7 +467,7 @@ public class Jogador extends javax.swing.JFrame {
             try {
                 servico.enviaJogada(n, idJogador);
             } catch (RemoteException e) {
-                JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Erro no cliqueBotao do jogador: " + e.getMessage());
             }
             
             Thread t = new Thread(new Runnable(){
@@ -528,7 +535,7 @@ public class Jogador extends javax.swing.JFrame {
         try {
             servico.enviaMensagem(msg, idJogador);
         } catch (RemoteException e) {
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro no enviaMensagemChat do jogador: " + e.getMessage());
         }
         
         mensagem.setText("");
@@ -724,6 +731,7 @@ public class Jogador extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
+        chatArea.setEditable(false);
         chatArea.setColumns(20);
         chatArea.setRows(5);
         jScrollPane2.setViewportView(chatArea);
