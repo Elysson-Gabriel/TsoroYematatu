@@ -60,7 +60,7 @@ public class Jogador extends javax.swing.JFrame {
         solicitouEmpate = false;
         fimJogo = false;
         
-        String localizacao = "//localhost/servico";
+        String localizacao = "rmi://localhost/servico";
         try {
             servico = (Servico) Naming.lookup(localizacao);
             idJogador = servico.recebeIdJogador();
