@@ -86,20 +86,41 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
         }
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws RemoteException{
+        Servidor servidor = new Servidor();
+        String localizacao = "//localhost/servicoServidor";
         try {
-            Servidor servidor = new Servidor();
-            String localizacao = "//localhost/servicoServidor";
+            /*
+                - Antes de executar o servidor execute o rmiregistry dentro do
+                diretório de classes: tsoroyematatu\target\classes
+                
+                1) Abrir terminal e navegar até o Path:
+                        cd (Diretório do projeto)/tsoroyematatu/target/classes
             
-            //System.out.println("Registrando o objeto no RMIRegistry...");
-            LocateRegistry.createRegistry(1099);
+                2) Digitar comando dentro do diretório para executar o RMIRegistry
+                        rmiregistry
+            
+            */
             
             Naming.rebind(localizacao, servidor);
             System.out.println("Aguardando Clientes!");
         } catch (RemoteException ex) {
-            System.out.println("Erro no servidor:" + ex.getMessage());
+            mostrarErro(ex, servidor, localizacao);
         } catch (MalformedURLException ex) {
             System.out.println("Erro de url mal formado:" + ex.getMessage());
+        }
+    }
+    
+    public static void mostrarErro(RemoteException r, Servidor s, String l){
+        try {
+            System.out.println("Erro no servidor:" + r.getMessage());
+            /*Se o rmregistry não estiver executando, caso não esperado apenas
+            para testes de desenvolvimento */
+            LocateRegistry.createRegistry(1099);
+            Naming.rebind(l, s);
+            System.out.println("Aguardando Clientes!");
+        } catch (RemoteException | MalformedURLException ex) {
+            System.out.println("Erro no servidor:" + ex.getMessage());
         }
     }
     
