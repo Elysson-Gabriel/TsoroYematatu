@@ -11,12 +11,11 @@ import java.rmi.RemoteException;
  *
  * @author elysson
  */
-public interface Servico extends Remote{
+public interface ServicoServidorItf extends Remote{
     
-    public int recebeIdJogador() throws RemoteException;
+    public int informaIdJogador() throws RemoteException;
     public void enviaJogada(int n, int idJogador) throws RemoteException;
-    public int recebeJogada(int outroJogador) throws RemoteException;
     public void enviaMensagem(String msg, int idJogador) throws RemoteException;
-    public String recebeMensagem(int outroJogador) throws RemoteException;
+    public void informaLocalizacao(String localizacao, int idJogador) throws RemoteException;
     
 }
