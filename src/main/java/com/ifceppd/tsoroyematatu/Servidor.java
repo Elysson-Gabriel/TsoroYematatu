@@ -113,9 +113,7 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
     
     public static void mostrarErro(RemoteException r, Servidor s, String l){
         try {
-            System.out.println("Erro no servidor:" + r.getMessage());
-            /*Se o rmregistry não estiver executando, caso não esperado apenas
-            para testes de desenvolvimento */
+            //TESTES DE DESENVOLVIMENTO - IGNORE
             LocateRegistry.createRegistry(1099);
             Naming.rebind(l, s);
             System.out.println("Aguardando Clientes!");
