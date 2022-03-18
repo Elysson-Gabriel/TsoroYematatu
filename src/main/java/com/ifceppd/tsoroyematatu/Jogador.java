@@ -401,7 +401,7 @@ public class Jogador extends javax.swing.JFrame {
                 solicitouEmpate = true;
                 chatArea.setText(chatArea.getText() + "\n Você solicitou empate ao adversário.");
             }
-        }else if(!msg.isBlank()){
+        }else if(!msg.isEmpty()){
             chatArea.setText(chatArea.getText() + "\n Eu: " + msg);
         }
         
@@ -461,7 +461,7 @@ public class Jogador extends javax.swing.JFrame {
                     titulo.setText("Jogador #1. Inicie a partida!");
                     chatArea.setText("Jogador #2 se conectou.");
                 }
-            }else if(!msg.isBlank()){
+            }else if(!msg.isEmpty()){
                 chatArea.setText(chatArea.getText() + "\n Adversario: " + msg);
             }
             chatArea.setCaretPosition(chatArea.getText().length());
