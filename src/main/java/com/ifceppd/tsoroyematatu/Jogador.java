@@ -10,7 +10,6 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -77,7 +76,7 @@ public class Jogador extends javax.swing.JFrame {
             Naming.rebind(localizacaoJogador, jogador);
             servico.informaLocalizacao(localizacaoJogador, idJogador);
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
-            JOptionPane.showMessageDialog(null, "Erro no construtor do jogador: " + e.getMessage());
+            System.out.println("Erro no construtor do jogador: " + e.getMessage());
         }
         
         initComponents();
@@ -306,7 +305,7 @@ public class Jogador extends javax.swing.JFrame {
                 try {
                     servico.enviaMensagem("/f", outroJogador);
                 } catch (RemoteException e) {
-                    JOptionPane.showMessageDialog(null, "Erro no verificaVencedor do jogador: " + e.getMessage());
+                    System.out.println("Erro no verificaVencedor do jogador: " + e.getMessage());
                 }
             }
         }
@@ -349,7 +348,7 @@ public class Jogador extends javax.swing.JFrame {
             try {
                 servico.enviaJogada(n, outroJogador);
             } catch (RemoteException e) {
-                JOptionPane.showMessageDialog(null, "Erro no cliqueBotao do jogador: " + e.getMessage());
+                System.out.println("Erro no cliqueBotao do jogador: " + e.getMessage());
             }
             //Toda jogada verifica se alguem venceu
             verificaVencedor();
@@ -408,7 +407,7 @@ public class Jogador extends javax.swing.JFrame {
         try {
             servico.enviaMensagem(msg, outroJogador);
         } catch (RemoteException e) {
-            JOptionPane.showMessageDialog(null, "Erro no enviaMensagemChat do jogador: " + e.getMessage());
+            System.out.println("Erro no enviaMensagemChat do jogador: " + e.getMessage());
         }
         
         mensagem.setText("");
@@ -441,7 +440,7 @@ public class Jogador extends javax.swing.JFrame {
                     try {
                         servico.enviaMensagem("/e", outroJogador);
                     } catch (RemoteException e) {
-                        JOptionPane.showMessageDialog(null, "Erro no executaChat do jogador: " + e.getMessage());
+                        System.out.println("Erro no atualizaChat do jogador: " + e.getMessage());
                     }
 
                 }else {

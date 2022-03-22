@@ -10,7 +10,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -66,7 +65,7 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
             
             return qtdJogadores;
         }else{
-            System.out.println("ERROR: Reinicie o servidor");
+            System.out.println("ERRO: Reinicie o servidor");
             return -1;
         }
         
@@ -82,7 +81,7 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
                 jogador2 = (ServicoJogadorItf) Naming.lookup(localizacao);
             }
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            System.out.println("Erro: " + e.getMessage());
         }
     }
     
@@ -118,7 +117,9 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
             Naming.rebind(l, s);
             System.out.println("Aguardando Clientes!");
         } catch (RemoteException | MalformedURLException ex) {
-            System.out.println("Erro no servidor:" + ex.getMessage());
+            System.out.print("Confira se a execução o rmiregistry está dentro do ");
+            System.out.println("diretório de classes: tsoroyematatu\\target\\classes");
+            System.out.println("ERRO: Reinicie o servidor");
         }
     }
     
