@@ -70,9 +70,6 @@ public class Jogador extends javax.swing.JFrame {
             JogadorImpl jogador = new JogadorImpl();
             String localizacaoJogador = "//localhost/jogador" + idJogador;
             
-            //System.out.println("Registrando o objeto no RMIRegistry...");
-            //LocateRegistry.createRegistry(1099);
-            
             Naming.rebind(localizacaoJogador, jogador);
             servico.informaLocalizacao(localizacaoJogador, idJogador);
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
@@ -301,7 +298,6 @@ public class Jogador extends javax.swing.JFrame {
                 desabilitaTodosBotoes();
                 fimJogo = true;
                 //Comunica o outro jogador que ele foi derrotado
-                //clienteChat.enviaMensagem("/f");
                 try {
                     servico.enviaMensagem("/f", outroJogador);
                 } catch (RemoteException e) {

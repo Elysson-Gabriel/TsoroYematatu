@@ -24,9 +24,7 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
     public Servidor() throws RemoteException{
         super();
         System.out.println("----- Servidor -----");
-        //Inicializa variáveis usada para comunicação entre os clientes
         qtdJogadores = 0;
-        
     }
 
     @Override
@@ -60,7 +58,6 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
                 /* Após os dois jogadores se conectarem, o primeiro jogador a se conectar
                   recebe uma mensagem "/i" que permite o início do jogo*/
                 enviaMensagem("/i", 1);
-                //qtdJogadores = 0;
             }
             
             return qtdJogadores;
@@ -110,6 +107,7 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
         }
     }
     
+    //TESTES DE DESENVOLVIMENTO - IGNORE
     public static void mostrarErro(RemoteException r, Servidor s, String l){
         try {
             //TESTES DE DESENVOLVIMENTO - IGNORE
@@ -122,5 +120,6 @@ public class Servidor extends UnicastRemoteObject implements ServicoServidorItf{
             System.out.println("ERRO: Reinicie o servidor");
         }
     }
+    //TESTES DE DESENVOLVIMENTO - IGNORE
     
 }
