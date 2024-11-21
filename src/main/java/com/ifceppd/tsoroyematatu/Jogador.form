@@ -342,7 +342,7 @@
                 </Property>
                 <Property name="lineWrap" type="boolean" value="true"/>
                 <Property name="rows" type="int" value="1"/>
-                <Property name="text" type="java.lang.String" value="Tsoro Yematatu"/>
+                <Property name="text" type="java.lang.String" value="Othello"/>
                 <Property name="wrapStyleWord" type="boolean" value="true"/>
               </Properties>
             </Component>

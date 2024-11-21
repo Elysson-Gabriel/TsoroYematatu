@@ -811,7 +811,7 @@ public class Jogador extends javax.swing.JFrame {
         titulo.setForeground(new java.awt.Color(255, 255, 255));
         titulo.setLineWrap(true);
         titulo.setRows(1);
-        titulo.setText("Tsoro Yematatu");
+        titulo.setText("Othello");
         titulo.setWrapStyleWord(true);
         jScrollPane1.setViewportView(titulo);
 
